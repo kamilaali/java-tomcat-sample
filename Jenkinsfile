@@ -3,10 +3,22 @@ pipeline {
     tools {
         maven 'maven-tool'
     }
-    stages {
+     stages {
         stage('Build Application') {
             steps {
                 sh 'mvn -f pom.xml clean package'
+  
+
+            post {
+                success {
+                    echo "Now Archiving the Artifacts....."
+                    archiveArtifacts artifacts: '**/*.war'
+                }
+            }
+        }
+    }
+}
+ 
             }
                     stage('Deploy to Staging Environment'){
             steps{
@@ -23,13 +35,3 @@ pipeline {
                 build job: 'deploy-application-production-environment-pipeline'
             }
         }
-
-            post {
-                success {
-                    echo "Now Archiving the Artifacts....."
-                    archiveArtifacts artifacts: '**/*.war'
-                }
-            }
-        }
-    }
-}
